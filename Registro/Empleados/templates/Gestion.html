@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{titulo}}</title>
+    <link rel= "short.icon" href = "{% static 'imagenes/logo.PNG'%}"></link>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link href= "{% static 'Css/getionPlanmtilla.css'%}"> </link>
+
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary navbar-success">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+            <a class="navbar-brand" href="#">CIDENET</a>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Registro</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    <dir class="container">
+        <div class = 'row'>
+            <div class = 'col-md-4'>
+              <span id="passwordHelpInline" class="form-text">
+                El formulario solo admite letras Mayusculas sin acentos la letras Ñ sera remplazada por la letra N
+              </span>
+                <form action = "crearEmpleado/" method = "POST" >
+                  <h4>Modulo de registro de empleado</h4>
+                    {% csrf_token %}
+                <div class="mb-3">
+                  <div class="col-auto">
+                  </div>
+                    <label class="form-label">Primer Nombre</label>
+                    <input onkeypress= "CaracterDenegados(event);" required type="text" id="textNombre" class="form-control" name="PrimerNombre" placeholder="ejemplo: Pepito" minlength="3" maxlength="20" requied autofocus pattern = "[A-Z]+">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Primer Apellido</label>
+                    <input onkeypress= "CaracterDenegados(event);" required type="text"id = "textApellido" class="form-control" name="PrimerApellido" placeholder="ejemplo: Perez" minlength="3" maxlength="20"requied autofocus pattern = "[A-Z]+">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Segundo Nombre</label>
+                    <input  onkeypress= "CaracterDenegados(event);" required type="text" id="Otro" class="form-control" name="OtroNombre" placeholder="ejemplo: Luiz" maxlength="50" requied autofocus pattern = "[A-Z]+">
+                  </div>
+                  <div class="mb-3">
+                    <label  class="form-label">Seleccione pais a laborar </label>
+                  </div>
+                  <select required name ="Opcion" class="form-select" aria-label="Default select example">
+                    <div>
+                    <option value="Colombia">Colombia</option>
+                    <option value="Estados_Unidos">Estados Unidos</option>
+                    </div>
+                  </select>
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button class="btn btn-success" type="submit">Guardar</button>
+                    <button class="btn btn-primary" type="button" >Cancelar</button>
+                  </div>
+            </div>
+        </form>
+
+            <div class = 'col-md-8'>
+                <h2>Lista de empledos</h2>
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Primer_Nombre</th>
+                                <th>Primer_Apellido</th>
+                                <th>Segundonombre</th>
+                                <th>Correo</th>
+                                <th>Pais</th>
+                                <th colspan="2">Opciones</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                                {% for c in object_list %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{c.PrimerNombre}}</td>
+                                    <td>{{c.PrimerApellido}}</td>
+                                    <td>{{c.OtrosNombres}}</td>
+                                    <td>{{c.Correo}}</td>
+                                    <td>{{c.PaisEmpleo}}</td>
+                                    <td><a href="Almacenador/{{c.id}}" button  class="btn btn-primary">Editar</a>
+                                    </td>                    
+                                    <td>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModa2" data-bs-whatever="@mdo"  onclick ="guardarID({{c.id}})" >Eliminar</button>
+                                       <!-- <a href="EliminarEmpleado/{{c.id}}" button  class="btn btn-danger">Eliminar</a> -->
+                                       
+                                    </td>
+                                </tr>
+                                {%endfor%}
+                        </tbody>
+                        <tfoot>
+                                <ul class="pagination-sm">
+                                    {% for c in object_list.leng %}
+                                        <li class= "page-item"><a href="#" class="page-link"> {{c}} </a></li>
+                                    {% endfor%}
+                                </ul>    
+                        </tfoot>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">New message</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal" tabindex="-1" id="exampleModa2">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Advertencia</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <h2>Estas seguro de eliminar al empleado</h2>
+            </div>
+            <div class="modal-footer">
+              <a id = "confirmacion" button  class="btn btn-danger">Eliminar</a>
+              <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+      <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+           {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+           {% endif %}
+    </span>
+</div>
+      </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js" integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js" integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous"></script>
+    <script src="{% static 'Java/gestionRequisitos.js'%}"> </script>
+    <script>
+        function CaracterDenegados(e)
+        {
+            var key =  e.keyCode : e.which;
+            tecla = String.fromCharCode(key).toString();
+            letras = "QWERTYUIOPASDFGHJKLZXCVBNM";
+    
+            especiales = [8,13];
+            tecla_especial = false
+            
+            for(var i in especial){
+    
+            if(key == especiales[i]){
+                tecla_especial = true;
+                break;
+            } }
+    
+            if(letras.indexOf(tecla)==-1 && !tecla_especial){
+                alert("No se permite el ingreso de letras minusculas, con acentos, o caracteres especiales como la letra ");
+                return false;
+            }
+        }
+    </script> 
+    <script> var id=''
+        function guardarID(identificador){ 
+            id = identificador;
+            console.log(id);
+            var a = document.getElementById("confirmacion");
+            a.href = "EliminarEmpleado/"+id;
+        }
+    </script>
+    <script>
+        function editarID(Editacion){ 
+            id = Editacion;
+            console.log(id);
+            var b = document.getElementById("Editacion");
+            b.href = "EditarEmpleado/"+id;
+            }
+    </script>   
+</body>
+</html>
